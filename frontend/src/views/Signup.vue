@@ -1,0 +1,220 @@
+<template>
+  <div class="signup">
+    <header class="header">
+      <div id="logo">
+        <img alt="Vue logo" src="../assets/logo.png">
+      </div>
+    </header>
+    <div class="container">
+      <h2> Creez votre compte</h2>
+
+      <!--Formulaire de création de compte-->
+      <form id="form" @submit = "sendForm">
+
+        <div class="first">
+          <!--Champs Prénom-->
+          <label for="prenom">Prénom* <span class="required"></span> </label>
+          <input @input = "checkForm" type="text" id="prenom" name="prenom" required>
+
+          <!--Champs Nom-->
+          <label for="nom">Nom* <span class="required"></span> </label>
+          <input @input = "checkForm" type="text" id="nom" name="nom" required>  
+        </div>
+
+        <div class="second">
+          <!--Champs Email-->
+          <label for="mail">E-mail <span class="required">*</span> </label>
+          <input @input = "checkForm" type="email" id="mail" name="email" required>
+
+          <!--Champs MDP-->
+          <label for="pass">Mot de passe <span class="required">*</span> </label>
+          <input @input = "checkForm" type="password" id="pass" name="password" minlength="8" required>
+          <p>Le mot de passe doit contenir au moins 8 caractères dont au moins 1 minuscule, 1 majuscule, 1 chiffre, et 1 caractère spécial</p>
+        </div>
+          
+        <!--Lien upload photo de profil-->
+        <label for="avatar" class="imageprofil">Télécharger une photo de profil *</label>
+        <input @input = "checkForm" @change = "loadImagePreview" type="file" id="avatar" name="avatar" required accept="image/*">
+        <div class="image-preview" v-if="imageLoaded===true">
+          <img src="" alt="aperçu de l'avatar" class="image-preview__image"> 
+        </div>
+
+         <!--Libellé champs requis-->
+        <div class="required"> * Champs requis </div>
+        <input type="submit" id="signupButton" value="S'inscrire" disabled>
+      </form>
+
+      <div class="loader" v-show="waiting===true"></div>
+      <p id="erreur" v-show="success===false"> Echec de l'inscription : {{message}} </p>
+
+      <div id="dejaCompte">
+        <p> Déjà un compte ? <router-link to="/">Se connecter</router-link> </p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'Signup',
+  data: function() {
+    return {
+    imageLoaded: false, //Affichage de l'avatar s'il est chargé
+    success: true, //affichage d'un message d'erreur si passe à false
+    waiting: false, //spinner affiché si variable passe à true
+    message :"", //message d'erreur
+    }
+  },
+  methods: {
+    //Vérification en direct de la validité du formulaire. Le bouton "Envoyer" n'est clickable que si tous les champs sont OK
+    checkForm() {
+      if (document.getElementById("mail").checkValidity() 
+      && document.getElementById("pass").checkValidity() 
+      && document.getElementById("prenom").checkValidity()
+      && document.getElementById("nom").checkValidity()
+      && document.getElementById("avatar").checkValidity()) {
+        document.getElementById("signupButton").disabled = false;
+      }
+      else document.getElementById("signupButton").disabled = true;
+    },
+    //Fonction de prévisualisation de l'avatar
+    loadImagePreview() {
+      const fileUploaded = document.getElementById("avatar").files[0];
+      if (fileUploaded) {
+        const reader = new FileReader();
+        this.imageLoaded = true;
+        reader.addEventListener("load", function() {
+          document.getElementsByClassName('image-preview__image')[0].setAttribute("src", this.result);
+        });
+        reader.readAsDataURL(fileUploaded);
+      }
+      else {this.imageLoaded=false;}
+    },
+    //Fonction appelée lors de la soumission du formulaire
+    sendForm(event) {
+      event.preventDefault(); //On gère nous-mêmes l'appel backend
+      const email= document.getElementById("mail").value;
+      const password = document.getElementById("pass").value;
+      const prenom = document.getElementById("prenom").value;
+      const nom = document.getElementById("nom").value;
+      const user = { "email": email, "password": password, "prenom": prenom, "nom": nom};
+      const fileToSend = event.target.avatar.files[0];
+      //Si l'avatar fait plus de 1Mb, on le bloque avant envoi à l'API
+      if (fileToSend.size > 1*1000*1000) {
+        this.waiting=false;
+        this.success = false;
+        this.message = "La taille maximale du fichier doit être de 1Mb";
+      }
+      //Envoi de l'image sous forme de fichier et des autres infos sous format JSON
+      else {
+        let formData = new FormData();
+        formData.append('user', JSON.stringify(user));
+        formData.append('image', fileToSend);
+        this.waiting = true;
+        const options = {
+          method: 'POST',
+          body: formData,
+          headers: {'Accept': 'application/json, text/plain, */*'}
+        };
+        fetch("http://localhost:3000/api/auth/signup", options)
+          .then (res => {
+            if (res.status == 201) {
+              this.success=true;
+              this.waiting=false;
+              this.$router.push({ name: 'login' });
+            }
+            else {res.json ()
+              .then (json => {
+                this.waiting=false;
+                this.success = false;
+                this.message = json.error;
+              }
+            )}
+          })
+          .catch (() => {
+            this.waiting=false;
+            this.success= false;
+            this.message = "Désolé, le serveur ne répond pas ! Veuillez réessayer ultérieurement";
+          })
+      }
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+form > p {
+  font-size:14px;
+  font-style: italic;
+  margin-top:0;
+}
+
+.image-preview {
+  width:300px;
+  min-height:100px;
+  margin-top:15px;
+  margin: auto;
+  &__image {
+    width:100%;
+  }
+}
+h2 {
+  padding-top: 10px;
+}
+.container {
+  box-shadow: 0px 1px 6px 0px;
+  width: 70%;
+  margin: auto;
+}
+label {
+  margin-top: 25px;
+}
+.first {
+  display: flex;
+  justify-content: space-around;
+  width: 50%;
+  margin: auto;
+}
+.second {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  margin: auto;
+}
+
+.required {
+  color:#AD0000;
+}
+input[type="file"] {
+    display: none;
+}
+.imageprofil {
+    border: none;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    margin:10px;
+}
+#signupButton {
+  margin:20px auto 0;
+  height:auto;
+  border:none;
+  padding:10px;
+  width: 30%;
+  border-radius:8px;
+  background:black;
+  color:#fff;
+  font-size:20px;
+  cursor:pointer;
+
+  &:disabled {
+  background: grey;
+  color:rgb(200, 200, 200);
+  cursor:auto;
+  }
+}
+
+#dejaCompte {
+  padding-bottom: 20px;
+}
+</style>
