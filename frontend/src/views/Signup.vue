@@ -2,7 +2,7 @@
   <div class="signup">
     <header class="header">
       <div id="logo">
-        <img alt="Vue logo" src="../assets/logo.png">
+        <img alt="Groupomania logo" src="../assets/logonoir.png" />
       </div>
     </header>
     <div class="container">
@@ -29,14 +29,13 @@
           <!--Champs MDP-->
           <label for="pass">Mot de passe <span class="required">*</span> </label>
           <input @input = "checkForm" type="password" id="pass" name="password" minlength="8" required>
-          <p>Le mot de passe doit contenir au moins 8 caractères dont au moins 1 minuscule, 1 majuscule, 1 chiffre, et 1 caractère spécial</p>
         </div>
           
         <!--Lien upload photo de profil-->
-        <label for="avatar" class="imageprofil">Télécharger une photo de profil *</label>
-        <input @input = "checkForm" @change = "loadImagePreview" type="file" id="avatar" name="avatar" required accept="image/*">
+        <label for="imageurl" class="imageprofil">Télécharger une photo de profil *</label>
+        <input @input = "checkForm" @change = "loadImagePreview" type="file" id="imageurl" name="imageurl" required accept="image/*">
         <div class="image-preview" v-if="imageLoaded===true">
-          <img src="" alt="aperçu de l'avatar" class="image-preview__image"> 
+          <img src="" alt="aperçu de votre image" class="image-preview__image"> 
         </div>
 
          <!--Libellé champs requis-->
@@ -59,9 +58,9 @@ export default {
   name: 'Signup',
   data: function() {
     return {
-    imageLoaded: false, //Affichage de l'avatar s'il est chargé
+    imageLoaded: false, //Affichage de l'imageurl s'il est chargé
     success: true, //affichage d'un message d'erreur si passe à false
-    waiting: false, //spinner affiché si variable passe à true
+    waiting: false,
     message :"", //message d'erreur
     }
   },
@@ -72,14 +71,14 @@ export default {
       && document.getElementById("pass").checkValidity() 
       && document.getElementById("prenom").checkValidity()
       && document.getElementById("nom").checkValidity()
-      && document.getElementById("avatar").checkValidity()) {
+      && document.getElementById("imageurl").checkValidity()) {
         document.getElementById("signupButton").disabled = false;
       }
       else document.getElementById("signupButton").disabled = true;
     },
-    //Fonction de prévisualisation de l'avatar
+    //Fonction de prévisualisation de l'imageurl
     loadImagePreview() {
-      const fileUploaded = document.getElementById("avatar").files[0];
+      const fileUploaded = document.getElementById("imageurl").files[0];
       if (fileUploaded) {
         const reader = new FileReader();
         this.imageLoaded = true;
@@ -98,8 +97,8 @@ export default {
       const prenom = document.getElementById("prenom").value;
       const nom = document.getElementById("nom").value;
       const user = { "email": email, "password": password, "prenom": prenom, "nom": nom};
-      const fileToSend = event.target.avatar.files[0];
-      //Si l'avatar fait plus de 1Mb, on le bloque avant envoi à l'API
+      const fileToSend = event.target.imageurl.files[0];
+      //Si l'imageurl fait plus de 1Mb, on le bloque avant envoi à l'API
       if (fileToSend.size > 1*1000*1000) {
         this.waiting=false;
         this.success = false;
@@ -148,6 +147,7 @@ form > p {
   font-style: italic;
   margin-top:0;
 }
+
 
 .image-preview {
   width:300px;

@@ -1,20 +1,22 @@
+// Utilisation de multer pour enregistrer les fichiers images
 const multer = require('multer');
 
-//Formats d'image acceptés
+// Modification de l'extension des fichiers
 const MIME_TYPES = {
   'image/jpg': 'jpg',
   'image/jpeg': 'jpg',
   'image/png': 'png'
 };
-
+// Limite la taille de l'image
 const maxSize = 1 * 1000 * 1000; //Max 1Mb
 
 //Définition de l'emplacement de stockage et du nom du fichier
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, 'medias');
+    callback(null, 'images');
   },
   filename: (req, file, callback) => {
+    // Génération du nom du fichier : nom d'origine + numero unique + . + extension
     const name = file.originalname.split(' ').join('_');
     const nameWithoutExt = name.split('.')[0];
     const extension = MIME_TYPES[file.mimetype];

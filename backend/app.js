@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const path = require('path');
 const helmet = require('helmet');  // plugin de sécurité pour les requêtes HTTP, les headers, protection XSS, détection du MIME TYPE...
 const xss = require('xss-clean'); //plugin de sécurité pour les entrées utilisateurs
@@ -19,14 +20,14 @@ app.use((req, res, next) => {
     next();
   });
 
-//Requêtes exploitables
-app.use(express.json());
+//tranforme le corp de la requete en objet JS utilisable
+app.use(bodyParser.json());
 
 //Utilisation du plugin de sécurité
 app.use(xss());
 
 //Gestion de la ressource image de façon statique
-app.use('/medias', express.static(path.join(__dirname, 'medias')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 //Routes de l'API
 app.use('/api/auth', userRoutes);

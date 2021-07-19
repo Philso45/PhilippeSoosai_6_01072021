@@ -11,10 +11,10 @@ const connection = mysql.createConnection({
     database: "Groupomania"
 });
 
-//Affiche "Connected à la console si la connexion réussit"
+//Affiche "Connected to groupomania à la console si la connexion est réussit"
 connection.connect(function(err) {
     if (err) throw err;
-    console.log("Connected!");
+    console.log("Connected to groupomania!");
 });
 
 module.exports = connection;

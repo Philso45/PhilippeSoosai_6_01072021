@@ -1,6 +1,9 @@
+// Création du serveur accès requête HTTP
 const http = require('http');
+//Import de l'app.js
 const app = require('./app');
 
+// Renvoie d'un port valide
 const normalizePort = val => {
   const port = parseInt(val, 10);
 

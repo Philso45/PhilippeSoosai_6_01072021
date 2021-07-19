@@ -3,7 +3,7 @@
   <div id="login">
     <header class="header">
       <div id="logo">
-        <img alt="Vue logo" src="../assets/logo.png">
+        <img alt="Groupomania logo" src="../assets/logonoir.png" />
       </div>
     </header>
     <h1> Je m'identifie</h1>
@@ -17,6 +17,7 @@
       <input type="submit" id="Ulogin" value="Connexion" disabled>
     </form>
 
+    <div class="loader" v-show="waiting===true"></div>
     <p id="erreur" v-show="success===false"> {{message}} </p>
     <div id="sign">
       <p> Pas encore de compte ? <router-link to="/signup">Créer un compte</router-link> </p>
@@ -30,6 +31,7 @@ export default {
   data: function() {
     return {
     success: true, //affichage d'un message d'erreur si le mot de passe est false
+    waiting: false, 
     message :"", //message d'erreur
     }
   },
@@ -60,7 +62,7 @@ export default {
             .then (json => {
               this.success=true;
               this.waiting=false;
-              const userInfo = {id: json.id, pseudo: json.pseudo, token: json.token};
+              const userInfo = {id: json.id, prenom: json.prenom, token: json.token};
               //En cas de réussite, on stocke les identifiants de connexion jusqu'à ce que l'utilisateur se déconnecte
               localStorage.setItem('userInfo', JSON.stringify(userInfo));
               this.$router.push({ name: 'posts' }); //Renvoi vers la page des posts
@@ -86,7 +88,7 @@ export default {
 
 <style lang="scss">
 #logo img {
-  height: 110px;
+  height: 80px;
 }
 
 h1 {

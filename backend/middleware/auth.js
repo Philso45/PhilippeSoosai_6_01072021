@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 //Token caché
 require('dotenv').config();
 
-//Vérifie que le token est le bon
+// Validation userId en comparaison avec le token
 module.exports = (req, res, next) => {
   try {
     const token = req.headers.authorization.split(' ')[1];
@@ -14,5 +14,5 @@ module.exports = (req, res, next) => {
     } 
     else {next();} //Si identification correcte, on autorise l'exécution du script suivant
   } 
-  catch {res.status(401).json({error: 'Requête non authorisée, veuillez vous connecter'})}
+  catch {res.status(401).json({error: error | 'Requête non authentifiée !' })}
 }
