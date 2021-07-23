@@ -6,6 +6,7 @@ const xss = require('xss-clean'); //plugin de sécurité pour les entrées utili
 const database = require('./config/database'); 
 
 //Import des routes
+const postsRoutes = require('./routes/posts');
 const userRoutes = require('./routes/user');
 
 const app = express();
@@ -30,6 +31,7 @@ app.use(xss());
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 //Routes de l'API
+app.use('/api/posts', postsRoutes);
 app.use('/api/auth', userRoutes);
 
 module.exports = app;

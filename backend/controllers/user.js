@@ -59,3 +59,57 @@ exports.login = (req, res, next) => {
     }
   });
 }
+
+//Permet de récupérer les infos de l'utilisateur (photo de profil et email)
+exports.getUserInfo = (req, res, next) => {
+  let getUserInfoQuery = 'SELECT email, imageurl FROM users where id = '+ database.escape(req.params.id);
+  database.query(getUserInfoQuery, function (err, result) {
+    if (err) throw err;
+    else {
+      if(result.length > 0) {
+        res.status(200).json({
+            email: result[0].email,
+            imageurl: result[0].imageurl,
+          })
+        }
+      else {res.status(401).json({ error: "L'utilisateur n'a pas été trouvé !" });}
+    }
+  })
+}
+
+//Permet de modifier la photo de profil d'un user
+exports.modifyUser = (req, res, next) => {
+  const imageurl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+  const infoAvatarQuery = "SELECT imageurl FROM users where id = "+ req.params.id;
+  database.query(infoAvatarQuery, function (err, result) {
+    if (err) {res.status(400).json({ error : err.code });}
+    else {
+      const oldimageurl = result[0].imageurl.split('/images/')[1];
+      const modifyAvatarQuery = "UPDATE users SET imageurl = '"+imageurl+"' WHERE id = "+ req.params.id;
+      database.query(modifyAvatarQuery, function (err, result) {
+        if (err) {res.status(400).json({ error : err.code });}
+        else {
+          fs.unlink(`images/${oldimageurl}`, () => {res.status(200).json({ message: 'Photo de profil modifié !'});})
+        }
+      })
+    }
+  })
+}
+
+//Permet d'effacer un user de la base
+exports.deleteUser = (req, res, next) => {
+  const deleteAvatarQuery = "SELECT imageurl FROM users where id = "+ req.params.id;
+  database.query(deleteAvatarQuery, function (err, result) {
+    if (err) {res.status(400).json({ error : err.code });}
+    else {
+      const filename = result[0].imageurl.split('/images/')[1];
+      fs.unlink(`images/${filename}`, () => {
+        let deleteQuery = "DELETE FROM users where id = " + req.params.id;
+          database.query(deleteQuery, function (err, result) {
+            if (err) {res.status(400).json({ error : err.code });}
+            else {res.status(200).json({ message: 'Utilisateur supprimé !'});}
+        })
+      })
+    }
+  })
+}

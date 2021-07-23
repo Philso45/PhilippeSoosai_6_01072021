@@ -12,6 +12,7 @@
     <form id="connexion" @submit = "sendForm">
       <label for="email">Adresse e-mail : </label>
       <input @input = "checkForm" type="email" id="email" name="email" required>
+      
       <label for="mdp">Mot de passe : </label>
       <input @input = "checkForm" type="password" id="mdp" name="password" minlength="8" required>
       <input type="submit" id="Ulogin" value="Connexion" disabled>
@@ -39,7 +40,8 @@ export default {
 
     //Vérification de la validité du formulaire. Le bouton Connexion n'est clickable que si tous les champs sont OK sinon il reste disabled
     checkForm() {
-      if (document.getElementById("email").checkValidity() && document.getElementById("mdp").checkValidity()) {
+      if (document.getElementById("email").checkValidity() 
+        && document.getElementById("mdp").checkValidity()) {
         document.getElementById("Ulogin").disabled = false;
       }
       else document.getElementById("Ulogin").disabled = true;
@@ -63,7 +65,7 @@ export default {
               this.success=true;
               this.waiting=false;
               const userInfo = {id: json.id, prenom: json.prenom, token: json.token};
-              //En cas de réussite, on stocke les identifiants de connexion jusqu'à ce que l'utilisateur se déconnecte
+              //En cas de réussite, on stocke les identifiants de connexion et le token jusqu'à ce que l'utilisateur se déconnecte
               localStorage.setItem('userInfo', JSON.stringify(userInfo));
               this.$router.push({ name: 'posts' }); //Renvoi vers la page des posts
             })
@@ -124,7 +126,7 @@ h1 {
   }
 }
 a {
-    font-weight: bold;
+    font-weight: normal;
     color: #381302;
 }
 #sign {

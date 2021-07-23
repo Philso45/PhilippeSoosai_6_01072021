@@ -3,6 +3,12 @@
   <div id="app">
     <router-view/>
     <footer class="footer">
+      <ul>
+        <a href="#"><li>Mentions légales</li></a>
+        <a href="#"><li>Contact</li></a>
+        <a href="#"><li>CGV</li></a>
+        <a href="#"><li>A propos</li></a>
+      </ul>
       <p>{{ copyright }}</p>
     </footer>
   </div>
@@ -15,7 +21,7 @@ export default {
   computed: {
 		copyright() {
 			const currentYear = new Date().getFullYear()
-			return `Copyright projet Groupomania Philippe Soosai ${currentYear}`
+			return `Tous droits reservés ${currentYear}`
 		}
   }
 }
@@ -29,14 +35,21 @@ header {
   justify-content: center;
   align-items: center;
   padding-top:5px;
+  border-bottom:2px solid black;
 }
 
 ul {
   list-style:none;
 }
+footer ul li {
+  font-size: 0.8em;
+  margin: 7px 0;
+  padding-top: 20px;
+}
 
-/*#add, li {
-  margin:10px 0;
+#add, li {
+  margin:25px 0;
+  font-size:1.3em;
   transform: scale(1);
   transition: all 400ms;
     &:hover {
@@ -44,28 +57,28 @@ ul {
       opacity: 0.6;
       cursor:pointer;
     }
-}*/
+}
 
 a {
   text-decoration: none;
   &:hover {
-    color: red;
+    color: grey;
   }
 }
 
 #nav li{
-    font-weight: bold;
     color: #381302;
     margin: 10px 20px;
 
     &:hover  {
-      color: red;
+      color: grey;
     }
 }
 
 footer {
   margin-top: 70px;
   padding-bottom: 20px;
+  background-color: #efebeb;
 }
 
 label {

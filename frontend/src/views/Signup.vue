@@ -9,36 +9,36 @@
       <h2> Creez votre compte</h2>
 
       <!--Formulaire de création de compte-->
-      <form id="form" @submit = "sendForm">
+      <form id="form" @submit = "sendForm"><!--Propriété vue.js permettant de gerer l'évènement au click-->
 
         <div class="first">
-          <!--Champs Prénom-->
+          <!--Champs Prénom requis-->
           <label for="prenom">Prénom* <span class="required"></span> </label>
           <input @input = "checkForm" type="text" id="prenom" name="prenom" required>
 
-          <!--Champs Nom-->
+          <!--Champs Nom requis-->
           <label for="nom">Nom* <span class="required"></span> </label>
           <input @input = "checkForm" type="text" id="nom" name="nom" required>  
         </div>
 
         <div class="second">
-          <!--Champs Email-->
+          <!--Champs Email requis-->
           <label for="mail">E-mail <span class="required">*</span> </label>
           <input @input = "checkForm" type="email" id="mail" name="email" required>
 
-          <!--Champs MDP-->
+          <!--Champs MDP requis-->
           <label for="pass">Mot de passe <span class="required">*</span> </label>
           <input @input = "checkForm" type="password" id="pass" name="password" minlength="8" required>
         </div>
           
-        <!--Lien upload photo de profil-->
+        <!--Lien upload photo de profil requis-->
         <label for="imageurl" class="imageprofil">Télécharger une photo de profil *</label>
         <input @input = "checkForm" @change = "loadImagePreview" type="file" id="imageurl" name="imageurl" required accept="image/*">
         <div class="image-preview" v-if="imageLoaded===true">
           <img src="" alt="aperçu de votre image" class="image-preview__image"> 
         </div>
 
-         <!--Libellé champs requis-->
+         <!--Libellé indiquant que les champs sont requis-->
         <div class="required"> * Champs requis </div>
         <input type="submit" id="signupButton" value="S'inscrire" disabled>
       </form>
@@ -58,8 +58,8 @@ export default {
   name: 'Signup',
   data: function() {
     return {
-    imageLoaded: false, //Affichage de l'imageurl s'il est chargé
-    success: true, //affichage d'un message d'erreur si passe à false
+    imageLoaded: false, //Affichage de la photo de profil si elle est chargé
+    success: true, //affichage d'un message d'erreur si echec de l'inscription
     waiting: false,
     message :"", //message d'erreur
     }
@@ -120,7 +120,7 @@ export default {
             if (res.status == 201) {
               this.success=true;
               this.waiting=false;
-              this.$router.push({ name: 'login' });
+              this.$router.push({ name: 'login' }); //Renvoie vers la page de login
             }
             else {res.json ()
               .then (json => {
@@ -133,7 +133,7 @@ export default {
           .catch (() => {
             this.waiting=false;
             this.success= false;
-            this.message = "Désolé, le serveur ne répond pas ! Veuillez réessayer ultérieurement";
+            this.message = "Erreur server !";
           })
       }
     }
