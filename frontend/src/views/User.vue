@@ -15,7 +15,7 @@
 
 
     <div class="modification">
-        <router-link to="/posts"> <button class = "button button__back"> <i class="fas fa-undo"></i> Retourner au fil d'actualité </button> </router-link>
+        <router-link to="/posts"> <button class = "button button__back"> Retourner au fil d'actualité </button> </router-link>
         <div class="modif2">
             <button class="button button__modify modifphoto" v-if="id==urlId" @click="modifyUser"> Modifier ma photo de profil </button>
             <button class="button button__delete deletephoto" v-if="id==urlId" @click="deleteUser"> Supprimer mon compte </button>

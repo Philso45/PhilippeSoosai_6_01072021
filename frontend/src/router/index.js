@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
 import Posts from '../views/Posts.vue'
 import User from '../views/User.vue'
+import AddPost from '../views/AddPost.vue'
 
 
 Vue.use(VueRouter)
@@ -28,6 +29,11 @@ const routes = [
     path: '/user/:id',
     name: 'user',
     component: User
+  },
+  {
+    path: '/addpost',
+    name: 'addpost',
+    component: AddPost
   },
 ]
 

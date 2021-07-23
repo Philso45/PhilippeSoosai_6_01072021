@@ -27,4 +27,27 @@ exports.getAllPosts = (req, res, next) => {
   })
 }
 
+//Fonction d'ajout d'un nouveau post (requête POST)
+exports.createPost = (req, res, next) => {
+  
+  //Cas avec média (mix fichier/ objet JSON)
+  if (req.file) {
+    const postObject = JSON.parse(req.body.post);
+    const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+    const postQuery = 'INSERT INTO Posts VALUES (NULL,'+database.escape(postObject.userId)+','+database.escape(postObject.title)+','+database.escape(postObject.description)+','+database.escape(imageUrl)+','+database.escape(postObject.url)+', NOW())';
+    database.query(postQuery, function (err, result) {
+      if (!err) {res.status(201).json({ message: 'Post créé !' })}
+      else {res.status(400).json({ error: err.code });}     
+      });
+  }
+
+  //Cas sans média (objet JSON pur)
+  else {
+    const postQuery = `INSERT INTO Posts VALUES (NULL,"${req.body.userId}","${req.body.title}","${req.body.description}","","${req.body.url}", NOW())`;
+    database.query(postQuery, function (err, result) {
+      if (!err) {res.status(201).json({ message: 'Post créé !' })}
+      else {res.status(400).json({ error: err.code });}       
+      });
+  }
+}
 
