@@ -43,7 +43,6 @@
         <input type="submit" id="signupButton" value="S'inscrire" disabled>
       </form>
 
-      <div class="loader" v-show="waiting===true"></div>
       <p id="erreur" v-show="success===false"> Echec de l'inscription : {{message}} </p>
 
       <div id="dejaCompte">
@@ -60,7 +59,6 @@ export default {
     return {
     imageLoaded: false, //Affichage de la photo de profil si elle est chargé
     success: true, //affichage d'un message d'erreur si echec de l'inscription
-    waiting: false,
     message :"", //message d'erreur
     }
   },
@@ -216,5 +214,9 @@ input[type="file"] {
 
 #dejaCompte {
   padding-bottom: 20px;
+}
+
+#dejaCompte a {
+  font-weight:bold
 }
 </style>

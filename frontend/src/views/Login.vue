@@ -114,7 +114,6 @@ h1 {
 	padding:10px;
 	border-radius:8px;
 	background:black;
-	font-weight:bold;
   color:#fff;
   font-size:20px;
   cursor:pointer;
@@ -131,5 +130,10 @@ a {
 }
 #sign {
   margin-bottom: 70px;
+}
+
+#sign a {
+
+  font-weight: bold;
 }
 </style>

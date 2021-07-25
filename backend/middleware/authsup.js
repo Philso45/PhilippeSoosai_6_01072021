@@ -1,0 +1,38 @@
+const jwt = require('jsonwebtoken');
+const database = require('../config/database');
+
+//Token caché
+require('dotenv').config();
+
+/*Même fonction que auth sauf qu'ici on cherche à savoir si l'utilisateur est l'administrateur 
+ou la personne qui a créé le post qu'on cherche à modifier ou supprimer*/
+
+module.exports = (req, res, next) => {
+  try {
+    const token = req.headers.authorization.split(' ')[1];
+    const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
+    const userId = decodedToken.userId;
+    const findUserEmailQuery = `select email from users where id = ${userId}`;
+    database.query(findUserEmailQuery, function (err, result) {
+      if (!err) {
+        if (result[0].email ===process.env.DATABASE_ADMIN_EMAIL) {next();}
+        else {
+          const findUserIdQuery = `select user_id as userId from posts where numero = ${req.params.id}`;
+          database.query(findUserIdQuery, function (err, result) {
+            if (!err) {
+              if ((req.body.userId && req.body.userId !== userId) || result[0].userId !== userId) {
+                res.status(401).json({error: 'Requête non authorisée'});
+              }
+              else {next();}
+            }
+            else throw err; 
+          })
+        }
+      }
+      else {
+        throw err;
+      }
+    })
+  }
+  catch {res.status(401).json({error: 'Requête non authorisée'})}  
+};

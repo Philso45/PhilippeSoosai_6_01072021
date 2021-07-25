@@ -16,7 +16,7 @@
     </header>
     <h1 v-if="prenom">Bonjour {{prenom}}, voici les derniers posts</h1>
     <div id="postsDiv"></div>
-    <div class="loader" v-show="waiting===true"></div>
+    
     <p id="erreur" v-show="success===false"> Echec de la requête : {{message}} </p>
   </div>
 </template>
@@ -28,8 +28,7 @@ export default {
   //data actualisées au chargement de la page ainsi qu'au cours de certains événements
   data: function() {
     return {
-      success: true, //affichage d'un message d'erreur si passe à false
-      waiting: false, //
+      success: true, //affichage d'un message d'erreur si passe à false     
       message :"", //message d'erreur
       id: "", //id de l'utilisateur connecté
       token: "", //token de connection
@@ -125,7 +124,7 @@ export default {
 
             //Affiche depuis quand le post est publié
             const publishedOn = document.createElement("p");
-            //La réponse de la databse nous indique depuis combien d'heures/min/sec le post est publié sous le format hhh:mm:ss
+            //La réponse de la database nous indique depuis combien d'heures/min/sec le post est publié sous le format hhh:mm:ss
             //On ne sélectionne que la partie "heures" pour la suite de la logique
             const hoursSincePost = parseInt(json[i].date.substring(0,json[i].date.indexOf(':')));
             switch (true) {
@@ -161,7 +160,7 @@ export default {
       .catch (() => {
       this.waiting=false;
       this.success= false;
-      this.message = "Désolé, le serveur ne répond pas ! Veuillez réessayer ultérieurement";
+      this.message = "Erreur serveur ! ";
       })
     },
 
@@ -185,22 +184,24 @@ export default {
 header {
   justify-content: space-between;
 }
+#postsDiv{
+  display: flex;
+  flex-wrap: wrap;
+}
 .post {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  box-shadow: 5px 5px 10px grey; /*effet d'ombre*/
+  box-shadow: 5px 5px 10px grey;
   margin:30px auto;
   padding:5px;
-  width:60%;
+  width:45%;
   background-color: #d4d3d3;
-  transform: scale(1);
   transition: all 400ms;
 
-    &:hover { //Effet de loupe de de fondu quand on survole le post avec la souris
-      transform: scale(1.1);
+    &:hover { 
       opacity: 0.6;
       cursor:pointer;
   }

@@ -13,7 +13,7 @@ const userCtrl = require('../controllers/user');
 router.post('/signup', multer, userCtrl.signup);
 router.post('/login', userCtrl.login);
 router.get('/:id', authSupUser, userCtrl.getUserInfo);
-router.put('/:id', authSupUser, multer, userCtrl.modifyUser); //Permet de modifier l'avatar
+router.put('/:id', authSupUser, multer, userCtrl.modifyUser); //Permet de modifier la photo de profil
 router.delete('/:id', authSupUser, userCtrl.deleteUser); //Permet d'effacer un utilisateur
 
 

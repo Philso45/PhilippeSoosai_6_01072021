@@ -15,7 +15,7 @@ module.exports = (req, res, next) => {
     const findUserEmailQuery = `select email from users where id = ${userId}`;
     database.query(findUserEmailQuery, function (err, result) {
       if (!err) {
-        if (result[0].email === process.env.database_ADMIN_EMAIL || req.params.id == userId) {next();}
+        if (result[0].email === process.env.DATABASE_ADMIN_EMAIL || req.params.id == userId) {next();}
         else res.status(401).json({error: 'Requête non authorisée'});
         } 
     else res.status(400).json({error: 'Mauvaise requête'});
