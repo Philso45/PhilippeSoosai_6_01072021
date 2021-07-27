@@ -44,7 +44,6 @@
 </template>
 
 <script>
-
 export default {
   data: function() {
     return {
@@ -54,25 +53,20 @@ export default {
       message :"", //message d'erreur
       id:"", //id de l'utilisateur connecté
       token:"", //token de connection
-      image_url: "" //url du média pour pouvoir l'utiliser dans plusieurs fonctions
+      mediaUrl: "" //url du média pour pouvoir l'utiliser dans plusieurs fonctions
     }
   },
-
   //Chargement automatique dès que le js est monté
   mounted() {
     const userInfo = JSON.parse(localStorage.getItem('userInfo')); //on récupère les infos de connection
     if (userInfo) { //On vérifie si l'utilisateur s'est connecté, sinon on le renvoie vers la page login
       this.id = userInfo.id;
       this.token = userInfo.token;
-
       this.getPost(); //Appel de la fonction qui charge les détails du post
-
     }
     else {this.$router.push({ name: 'login' });}
   },
-
   methods: {
-
     getPost() {
       const optionsGetPost = {
       method: 'GET',
@@ -80,11 +74,9 @@ export default {
           'Authorization': `Bearer ${this.token}`
         }
       };
-
       //L'id du post est dans l'url après le dernier "/"
       const postId = window.location.href.substr((window.location.href.lastIndexOf("/") + 1));
       this.waiting = true;
-
       fetch(`http://localhost:3000/api/posts/${postId}`, optionsGetPost)
         .then (res => {
           if (res.status == 200) {res.json ()
@@ -95,7 +87,7 @@ export default {
               if (json.description) {document.getElementById('description').value = json.description;}
               if (json.link) {document.getElementById('link').value = json.link;}
               if (json.image_url) {
-                this.image_url=json.image_url;
+                this.mediaUrl=json.image_url;
                 const mediaExtension = json.image_url.substr((json.image_url.lastIndexOf('.') + 1));
                 //Cas de la vidéo
                 if (mediaExtension === 'mp4') {
@@ -120,13 +112,11 @@ export default {
           this.message = "Désolé, le serveur ne répond pas ! Veuillez réessayer ultérieurement";
         })
     },
-
     //Effacement des données de connection et redirection vers la page login
     disconnection() {
       localStorage.clear();
       this.$router.push({ name: 'login' });
     },
-
     //Action en cas de click sur "Supprimer le média"
     deleteMedia() {
       //Cas de la vidéo
@@ -140,7 +130,6 @@ export default {
         document.getElementById("media").value='';
         this.imageLoaded=false;}
       },
-
     //Vérification en direct de la validité du formulaire. Le bouton "Envoyer" n'est clickable que si tous les champs sont OK
     checkForm() {
       if (document.getElementById("title").checkValidity() 
@@ -151,7 +140,6 @@ export default {
       }
       else {document.getElementById("modifyPost").disabled = true;}
     },
-
     //Fonction de prévisualisation du média
     loadImagePreview() {
       const fileUploaded = document.getElementById("media").files[0];
@@ -183,11 +171,9 @@ export default {
         this.videoLoaded=false;
       }
     },
-
     //Fonction appelée lors de la soumission du formulaire
     modifyPost(event) {
       event.preventDefault(); //On gère nous-mêmes l'appel backend
-
       //On récupère toutes les infos du formulaire
       const title= document.getElementById("title").value;
       const description = document.getElementById("description").value;
@@ -200,7 +186,7 @@ export default {
       if ( (!fileToSend) && (!this.imageLoaded) && (!this.videoLoaded)) {
         const optionsModifyPost = {
           method: 'PUT',
-          body: JSON.stringify({"title": title, "description": description, "url": url, "image_url":"" }),
+          body: JSON.stringify({"title": title, "description": description, "url": url, "mediaUrl":"" }),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.token}`
@@ -230,20 +216,18 @@ export default {
             this.message = "Erreur serveur";
           })
       }
-
       //Si la taille du fichier est > 20Mb, on n'envoie même pas la requête au serveur
       else if ((fileToSend) && (fileToSend.size > 20*1000*1000)) {
         this.waiting=false;
         this.success = false;
         this.message = "La taille maximale du fichier doit être de 20Mb";
       }
-
       //Cas où on n'a pas chargé de nouveau média, mais qu'il y en avait un dans le post d'origine
       else if ((!fileToSend) && (this.imageLoaded||this.videoLoaded)) {
         const optionsModifyPost = {
         method: 'PUT',
-        //Dans le image_url, on remet l'url du média déjà présent
-        body: JSON.stringify({"title": title, "description": description, "url": url, "image_url": this.image_url }),
+        //Dans le mediaUrl, on remet l'url du média déjà présent
+        body: JSON.stringify({"title": title, "description": description, "url": url, "mediaUrl": this.mediaUrl }),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${this.token}`
@@ -273,7 +257,6 @@ export default {
             this.message = "Erreur serveur";
           })
       }
-
       //Cas où il y a un nouveau média. La requête comprendra un fichier et un objet JSON
       else {
         let formData = new FormData();
@@ -315,13 +298,11 @@ export default {
 </script>
 
 <style lang="scss">
-
 .media-preview {
   width:300px;
   min-height:100px;
   margin-top:15px;
   margin: auto;
-
   &__image {
     width:100%;
   }
@@ -329,25 +310,20 @@ export default {
     width:100%;
   }
 }
-
 .required {
   color:#AD0000;
 }
 input[type="file"] {
     display: none;
 }
-
 .custom-file-upload {
     display: inline-block;
     padding: 6px 12px;
     cursor: pointer;
 }
-
 #allComments p span {
   background-color: white;
-
 }
-
 #modifyPost {
   margin:20px auto 0;
   height:auto;
@@ -357,12 +333,10 @@ input[type="file"] {
   color:#fff;
   font-size:20px;
   cursor:pointer;
-
   &:disabled {
   background: grey;
   color:white;
   cursor:auto;
   }
 }
-
 </style>

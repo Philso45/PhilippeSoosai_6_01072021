@@ -49,7 +49,6 @@
 </template>
 
 <script>
-
 export default {
     data: function() {
         return {
@@ -65,7 +64,6 @@ export default {
             userDislike:false //Vrai si l'utilisateur en cours a disliké le post
         }
     },
-
     //Chargement automatique dès que le js est monté
     mounted() {
         const userInfo = JSON.parse(localStorage.getItem('userInfo')); //on récupère les infos de connection
@@ -73,13 +71,10 @@ export default {
             this.id = userInfo.id;
             this.prenom = userInfo.prenom;
             this.token = userInfo.token;
-
             this.getPostDetails(); //Appel de la fonction qui charge les détails du post
         }
-
         else this.$router.push({ name: 'login' }); //sinon on le renvoie vers la page login
     },
-
     methods: {
         getPostDetails(){
             
@@ -87,7 +82,6 @@ export default {
             document.getElementById("postDiv").innerHTML='';
             this.userLike=false;
             this.userDislike=false;
-
             //Requête GET à l'API
             const optionsGetPost = {
             method: 'GET',
@@ -97,7 +91,6 @@ export default {
             };
             const postId = window.location.href.substr((window.location.href.lastIndexOf("/") + 1));
             this.waiting = true;
-
             fetch(`http://localhost:3000/api/posts/${postId}`, optionsGetPost)
             .then (res => {
                 if (res.status == 200) {
@@ -105,12 +98,10 @@ export default {
                     .then (json => {
                         this.waiting=false;
                         const divToFill = document.getElementById('postDiv');
-
                         //Titre du post
                         let newH2 = document.createElement("h2");
                         newH2.textContent = json.title;
                         divToFill.appendChild(newH2);
-
                         //Description s'il y en a
                         if (json.description) {
                             let newP = document.createElement("p");
@@ -118,7 +109,6 @@ export default {
                             newP.setAttribute("id","postDescription");
                             divToFill.appendChild(newP);
                         }
-
                         //Affichage du média s'il y en a
                         if (json.image_url) {
                             const publicationContainer = document.createElement("div");
@@ -140,7 +130,6 @@ export default {
                                 publicationContainer.appendChild(newImage);
                             }
                         }
-
                         //S'il y a un lien
                         if (json.link) {
                             let newP = document.createElement("p");
@@ -150,11 +139,11 @@ export default {
                             newP.appendChild(newA);
                             divToFill.appendChild(newP);
                         }
-
                         //Prenom et photo de profil
                         const picContainer = document.createElement("p");
+                        console.log(picContainer);
                         divToFill.appendChild(picContainer);
-                        picContainer.textContent = `Par ${json.pseudo} `;
+                        picContainer.textContent = `Par ${json.prenom} `;
                         this.postPseudo=json.pseudo;
                         const newImage = document.createElement("img");
                         newImage.src = json.imageurl;
@@ -189,13 +178,11 @@ export default {
                                 break;
                         }
                         divToFill.appendChild(publishedOn);
-
                         //Ajout des likes et dislikes, ainsi que du texte indiquant le nombre total de commentaires
                         const likesAndComments = document.createElement("div");
                         likesAndComments.setAttribute("id", "likesAndComments");
                         const likesDiv = document.createElement("div");
                         likesAndComments.appendChild(likesDiv);
-
                     /*Partie likes*/
                         const likeDiv = document.createElement("div");
                         likeDiv.setAttribute("class", "like");
@@ -212,7 +199,6 @@ export default {
                         likeDiv.addEventListener("click", this.postLike);
                         likesDiv.appendChild(likeDiv);
                     /*Fin de la partie likes*/
-
                     /*Partie dislikes*/
                         const dislikeDiv = document.createElement("div");
                         dislikeDiv.setAttribute("class", "like");
@@ -229,12 +215,10 @@ export default {
                         dislikeDiv.addEventListener("click", this.postDislike);
                         likesDiv.appendChild(dislikeDiv);
                     /*Fin de la partie dislikes*/
-
                     /*Partie nombre de commentaires*/
                         const numberComments = document.createElement("p");
                         numberComments.setAttribute("id", "numberOfComments");
                     /*Fin de la partie nombre de commentaires*/
-
                         //Appel de la fonction qui récupère tous les commentaires du post
                         this.getAllComments();
                         
@@ -251,12 +235,10 @@ export default {
                 this.message = "Désolé, le serveur ne répond pas ! Veuillez réessayer ultérieurement";
             })
         },
-
         //Fonction de post des likes
         postLike(){
             const postId = window.location.href.substr((window.location.href.lastIndexOf("/") + 1));
             this.waiting=true;
-
             //Si le post est déjà liké, ça veut dire qu'on veut le dé-liker => on poste la valeur 1 pour l'API
             if (this.userLike == true) {
                 const optionsLike = {
@@ -291,7 +273,6 @@ export default {
                         this.message = "Désolé, le serveur ne répond pas ! Veuillez réessayer ultérieurement";
                     });
             }
-
             //Si le post n'a pas encore été liké par nous-mêmes, on poste la valeur 2 à l'API
             else {
                 const optionsLike = {
@@ -325,12 +306,10 @@ export default {
                     });
             }
         },
-
         //Fonction de post des dislikes
         postDislike() {
             const postId = window.location.href.substr((window.location.href.lastIndexOf("/") + 1));
             this.waiting=true;
-
             //Si le post est déjà disliké par nous, ça veut dire qu'on veut le dé-disliker => on poste la valeur -1 pour l'API
             if (this.userDislike == true) {
                 const optionsDislike = {
@@ -363,7 +342,6 @@ export default {
                         this.message = "Désolé, le serveur ne répond pas ! Veuillez réessayer ultérieurement";
                     });
             }
-
             //Si le post n'a pas encore été disliké par nous-mêmes, on poste la valeur -2 à l'API
             else {
                 const optionsDislike = {
@@ -397,24 +375,20 @@ export default {
                     });
             }
         },
-
         //Effacement des données de connection et redirection vers la page login
         disconnection() {
             localStorage.clear();
             this.$router.push({ name: 'login' });
         },  
-
         //Cas du click sur bouton "modifier le post" => renvoi vers la page modifypost
         modifyPost() {
             const postId = window.location.href.substr((window.location.href.lastIndexOf("/") + 1));
             this.$router.push({ path: `/modifypost/${postId}` })
         },
-
         //Fonction pour obtenir l'ensemble des commentaires
         getAllComments() {
             //Réinitialisation du bloc commentaires
             document.getElementsByClassName("allComments")[0].innerHTML='';
-
             //Appel à l'API
             const optionsGetComments = {
             method: 'GET',
@@ -431,7 +405,6 @@ export default {
                             this.waiting=false;
                             this.numberOfComments = json.length;
                             const divToFill = document.getElementsByClassName('allComments')[0];
-
                             //Affichage de l'info "nomnbre total de commentaires en bas du post"
                             if (this.numberOfComments > 1) {document.getElementById("numberOfComments").textContent= this.numberOfComments + " commentaires";}
                             else if (this.numberOfComments == 1) {document.getElementById("numberOfComments").textContent= "1 commentaire";}
@@ -439,7 +412,6 @@ export default {
                             
                             //S'il y a des commentaires
                             if (json.length>0) {
-
                                 //Paragraphe d'intro
                                 const introP = document.createElement("p");
                                 introP.setAttribute("id","commentsIntro");
@@ -454,7 +426,6 @@ export default {
                                     newSpan.innerHTML = `${json[i].prenom} <img src='${json[i].imageurl}' width='20' height='20' alt='photo de profil de ${json[i].prenom}'> : ${json[i].comment}`;
                                     newP.appendChild(newSpan);
                                     divToFill.appendChild(newP);
-
                                     //Seul l'admin ou celui qui a créé le commentaire a accès au bouton de suppression du commentaire
                                     if (this.prenom == json[i].pseudo || this.pseudo == 'SuperAdmin') {
                                         const newButton = document.createElement("button");
@@ -462,7 +433,6 @@ export default {
                                         newButton.setAttribute("class", "deleteComment");
                                         newButton.innerHTML = '<i class="fas fa-trash fa-lg"></i>';
                                         newP.appendChild(newButton);
-
                                         //Appel à l'API en cas de suppression du commentaire
                                         newButton.addEventListener("click", () => {
                                             const optionsDeleteComment = {
@@ -504,7 +474,6 @@ export default {
                             } //Fin du "if" sur l'existence des commentaires
                         }) //Fin des actions en cas de réponse OK de l'API GET sur les commentaires
                     }
-
                     //Cas où l'API renvoie un code d'erreur
                     else {res.json ()
                         .then (json => {
@@ -520,7 +489,6 @@ export default {
                     this.message = "Désolé, le serveur ne répond pas ! Veuillez réessayer ultérieurement";
                 })
         },
-
         //Fonction appelée en cas de suppression du post
         deletePost() {
             //Demande de confirmation avant de supprimer
@@ -535,7 +503,6 @@ export default {
                 const currentUrl = window.location.href;
                 const postId = currentUrl.substr((currentUrl.lastIndexOf("/") + 1));
                 this.waiting = true;
-
                 fetch(`http://localhost:3000/api/posts/${postId}`, optionsDeletePost)
                     .then (res => {
                         if (res.status == 200) {res.json ()
@@ -561,7 +528,6 @@ export default {
                     })
             }
         },
-
         //Fonction pour poster un nouveau commentaire
         postComment() {
             const postId = window.location.href.substr((window.location.href.lastIndexOf("/") + 1));
@@ -607,20 +573,16 @@ export default {
         } //Fin de la fonction
     } //Fin des méthodes
 }
-
 </script>
 
 <style lang="scss">
-
 section {
     width:60%;
     margin:auto;
 }
-
 @media screen and (max-width: 600px) {
   section {width:90%;}
 }
-
 #postDiv {
     text-align: center;
     box-shadow: 5px 5px 10px grey; //effet d'ombre
@@ -628,13 +590,11 @@ section {
     background-color: #d4d3d3;
     padding:5px;
 }
-
 #postDescription {
     border: 1px solid black;
     background: white;
     height: auto;
 }
-
 #commentDiv {
     margin:20px auto;
     
@@ -643,52 +603,43 @@ section {
         width:90%;
     }
 }
-
 #commentsIntro {
     text-align: center;
 }
-
 .allComments > p {
     font-size:18px;
     margin:15px;
     word-wrap: break-word;
     
 }
-
 .allComments > p:nth-child(2n) {
     text-align: left;
     box-shadow: 0 0 16px;
     padding: 10px;
 }
-
 .allComments > p:nth-child(2n+1) {
     text-align: right;
 }
-
 p span {
     background-color: white;
     margin-right: 10px;
     font-size: 1.2em;
 }
-
 .deleteComment {
     background-color: white;
     cursor: pointer;
     border-radius: 8px;
     padding: 5px;
 }
-
 #likesAndComments {
     display:flex;
 }
-
 .like {
     margin:8px;
     &:hover {
     cursor: pointer;
     }
 }
-
 .button {
     color: white;
     cursor: pointer;
@@ -697,7 +648,6 @@ p span {
     padding: 10px;
     font-weight:bold;
     font-size: 16px;
-
     &__modify {
         background-color: black;
     }
@@ -715,8 +665,6 @@ p span {
         text-decoration: none;
     }
 }
-
-
 img, video {
 max-width:80%;
 max-height:200px;

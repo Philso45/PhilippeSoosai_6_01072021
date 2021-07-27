@@ -39,7 +39,6 @@
 
     <router-link to="/posts"> <button class = "button button__back"> Retourner au fil d'actualité </button> </router-link>
 
-    <div class="loader" v-show="waiting===true"></div>
     <p id="erreur" v-show="success===false"> Echec de la création de post : {{message}} </p>
 
   </div>
@@ -53,7 +52,6 @@ export default {
     imageLoaded: false, //Permet d'afficher l'image chargée si true
     videoLoaded: false, //Permet d'afficher la vidéo chargée si true
     success: true, //affichage d'un message d'erreur si passe à false
-    waiting: false,
     message :"", //message d'erreur
     id:"", //id de l'utilisateur connecté
     token:"" //token de connection

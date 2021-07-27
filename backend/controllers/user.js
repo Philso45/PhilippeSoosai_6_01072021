@@ -80,12 +80,12 @@ exports.getUserInfo = (req, res, next) => {
 //Permet de modifier la photo de profil d'un user
 exports.modifyUser = (req, res, next) => {
   const imageurl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-  const infoAvatarQuery = "SELECT imageurl FROM users where id = "+ req.params.id;
+  const infoAvatarQuery = "SELECT imageurl FROM users where id = "+ database.escape(req.params.id);
   database.query(infoAvatarQuery, function (err, result) {
     if (err) {res.status(400).json({ error : err.code });}
     else {
       const oldimageurl = result[0].imageurl.split('/images/')[1];
-      const modifyAvatarQuery = "UPDATE users SET imageurl = '"+imageurl+"' WHERE id = "+ req.params.id;
+      const modifyAvatarQuery = "UPDATE users SET imageurl = '"+imageurl+"' WHERE id = "+ database.escape(req.params.id);
       database.query(modifyAvatarQuery, function (err, result) {
         if (err) {res.status(400).json({ error : err.code });}
         else {
@@ -98,13 +98,13 @@ exports.modifyUser = (req, res, next) => {
 
 //Permet d'effacer un user de la base
 exports.deleteUser = (req, res, next) => {
-  const deleteAvatarQuery = "SELECT imageurl FROM users where id = "+ req.params.id;
+  const deleteAvatarQuery = "SELECT imageurl FROM users where id = "+ database.escape(req.params.id);
   database.query(deleteAvatarQuery, function (err, result) {
     if (err) {res.status(400).json({ error : err.code });}
     else {
       const filename = result[0].imageurl.split('/images/')[1];
       fs.unlink(`images/${filename}`, () => {
-        let deleteQuery = "DELETE FROM users where id = " + req.params.id;
+        let deleteQuery = "DELETE FROM users where id = " + database.escape(req.params.id);
           database.query(deleteQuery, function (err, result) {
             if (err) {res.status(400).json({ error : err.code });}
             else {res.status(200).json({ message: 'Utilisateur supprimé !'});}

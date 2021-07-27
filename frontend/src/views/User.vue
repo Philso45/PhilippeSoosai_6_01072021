@@ -21,7 +21,6 @@
             <button class="button button__delete deletephoto" v-if="id==urlId" @click="deleteUser"> Supprimer mon compte </button>
         </div>
     </div>
-    <div class="loader" v-show="waiting===true"></div>
     <p id="erreur" v-show="success===false"> Echec de la requête : {{message}} </p>
   </div>
 </template>
@@ -32,7 +31,6 @@ export default {
     data: function() {
         return {
             success: true, //affichage d'un message d'erreur si passe à false
-            waiting: false, //spinner affiché si variable passe à true
             message :"", //message d'erreur
             id: "", //id de l'utilisateur connecté
             token: "", //token de connection
