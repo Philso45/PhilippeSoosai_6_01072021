@@ -152,9 +152,9 @@ export default {
                         newImage.height = 50;
                         divToFill.appendChild(newImage);
                         
-                        //Info indiquant de quand date le post
+                        //Paragraphe indiquant de quand date le post
                         const publishedOn = document.createElement("p");
-                        /*L'info date reçue de la base indique "post publié il y a hhh:mm:ss " 
+                        /*Le paragraphe date reçue de la base indique "post publié il y a hhh:mm:ss " 
                         On ne s'intéresse ici qu'au nombre d'heures depuis que la post a été publié*/
                         const hoursSincePost = parseInt(json.date.substring(0,json.date.indexOf(':')));
                         switch (true) {
@@ -232,7 +232,7 @@ export default {
             .catch (() => {
                 this.waiting=false;
                 this.success= false;
-                this.message = "Désolé, le serveur ne répond pas ! Veuillez réessayer ultérieurement";
+                this.message = "Erreur server !";
             })
         },
         //Fonction de post des likes
@@ -302,7 +302,7 @@ export default {
                     .catch (() => {
                         this.waiting=false;
                         this.success= false;
-                        this.message = "Désolé, le serveur ne répond pas ! Veuillez réessayer ultérieurement";
+                        this.message = "Erreur server !";
                     });
             }
         },

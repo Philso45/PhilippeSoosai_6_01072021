@@ -174,14 +174,20 @@ exports.modifyPost = (req, res, next) => {
     const infoMediaUrlQuery = "SELECT image_url FROM posts where numero = "+ id;
     const mediaUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
     database.query(infoMediaUrlQuery, function (err, result) {
-      if (err) {res.status(400).json({ error : err.code });}
+      if (err) {
+        res.status(400).json({ error : err.code });
+      }
       else {
         //On récupère l'url du média précédent pour le supprimer
         const oldMediaUrl = result[0].image_url.split('/images/')[1];
         const putQuery = `UPDATE Posts SET title = "${postObject.title}", description = "${postObject.description}", image_url = "${mediaUrl}", link = "${postObject.url}" where numero = ${id}`;
         database.query(putQuery, function (err, result) {
           //Suppression de l'ancien média et réponse statut OK
-          if (!err) {fs.unlink(`images/${oldMediaUrl}`, () => {res.status(200).json({ message: 'Post modifié !'});})}
+          if (!err) {
+            fs.unlink(`images/${oldMediaUrl}`, () => {
+              res.status(200).json({ message: 'Post modifié !'});
+            })
+          }
           //Sinon statut 400 avec code d'erreur
           else res.status(400).json({ error : err.code })     
         });
@@ -266,7 +272,7 @@ const id = parseInt(req.params.id);
     const likeQuery = `delete from likes where user_id = ${req.body.userId} and post_id = ${id}`;
     database.query(likeQuery, function (err, result) {
       if (!err) {
-        res.status(201).json({ message: 'Like pris en compte !' })
+        res.status(201).json({ message: 'Dé-Like pris en compte !' })
       }
       else res.status(400).json({ error : err.code })    
     });
@@ -277,7 +283,7 @@ const id = parseInt(req.params.id);
     const dislikeQuery = `delete from dislikes where user_id = ${req.body.userId} and post_id = ${id}`;
     database.query(dislikeQuery, function (err, result) {
       if (!err) {
-        res.status(201).json({ message: 'Like pris en compte !' })
+        res.status(201).json({ message: 'Dé-Dislike pris en compte !' })
       }
       else res.status(400).json({ error : err.code })    
     });
@@ -292,7 +298,7 @@ const id = parseInt(req.params.id);
         const dislikeQuery = `insert into dislikes values (${id},${req.body.userId})`;;
         database.query(dislikeQuery, function (err, result) {
           if (!err) {
-          res.status(201).json({ message: 'Like pris en compte !' })
+          res.status(201).json({ message: 'Dislike pris en compte !' })
           }
           else res.status(400).json({ error : err.code })     
         });
