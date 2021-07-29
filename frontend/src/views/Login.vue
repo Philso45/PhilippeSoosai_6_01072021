@@ -6,10 +6,11 @@
         <img alt="Groupomania logo" src="../assets/logonoir.png" />
       </div>
     </header>
-    <h1> Je m'identifie</h1>
+    
 
     <!--Formulaire de connexion-->
     <form id="connexion" @submit = "sendForm">
+      <h1> Je m'identifie</h1>
       <label for="email">Adresse e-mail : </label>
       <input @input = "checkForm" type="email" id="email" name="email" required>
       
@@ -93,8 +94,8 @@ export default {
   height: 80px;
 }
 
-h1 {
-  margin-top: 60px;
+#connexion h1 {
+  margin-top: -6px;
 }
 
 #connexion {

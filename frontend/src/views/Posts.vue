@@ -33,11 +33,11 @@ export default {
       id: "", //id de l'utilisateur connecté
       token: "", //token de connection
       prenom:"", //prenom de l'utilisateur connecté
-      Posts: [] //array contenant l'ensemble des posts après requête database
+      Posts: [] //array contenant l'ensemble des posts après requête à la database
     }
   },
 
-  //Chargement automatique dès que le js est monté
+  //Chargement automatique les infos dès que le js est monté
   mounted() {
     const userInfo = JSON.parse(localStorage.getItem('userInfo')); //on récupère les infos de connection
     if (userInfo) { //On vérifie si l'utilisateur s'est connecté, sinon on le renvoie vers la page login
@@ -45,7 +45,7 @@ export default {
     this.id = userInfo.id;
     this.token = userInfo.token;
 
-    this.getAllPosts(); //Appel de la fonction qui charge l'ensemble des posts
+    this.getAllPosts(); //Appel de la fonction qui charge l'ensemble des posts sur le fil d'actu
     }
 
     else this.$router.push({ name: 'login' });

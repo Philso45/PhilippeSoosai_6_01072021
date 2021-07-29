@@ -51,8 +51,9 @@ exports.login = (req, res, next) => {
               id: result[0].id,
               pseudo: result[0].prenom,
               token: jwt.sign({ userId: result[0].id },process.env.JWT_TOKEN,{ expiresIn: '24h' })
-          });}
-        })
+          });
+        }
+      })
         .catch(error => res.status(500).json({ error }));
       }
       else {res.status(401).json({ error: 'Utilisateur non trouvé !' });}

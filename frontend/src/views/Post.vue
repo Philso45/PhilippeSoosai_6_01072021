@@ -633,6 +633,7 @@ p span {
 }
 #likesAndComments {
     display:flex;
+    justify-content: space-between;
 }
 .like {
     margin:8px;
@@ -666,7 +667,7 @@ p span {
     }
 }
 img, video {
-max-width:80%;
-max-height:200px;
+max-width:100%;
+max-height:300px;
 }
 </style>

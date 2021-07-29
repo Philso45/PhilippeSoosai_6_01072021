@@ -92,7 +92,11 @@ export default {
             }
 
             //Sinon on est renvoyé vers la page login
-            else {res.json ().then (() => {this.$router.push({ name: 'login' });})}
+            else {
+                res.json ().then (() => {
+                    this.$router.push({ name: 'login' });
+                })
+            }
         })
         .catch (() => {
             this.waiting=false;
@@ -191,7 +195,7 @@ export default {
                     body: formData,
                     headers: {'Accept': 'application/json, text/plain, */*',
                         'Authorization': `Bearer ${this.token}`}
-                };
+                    };
                 fetch(`http://localhost:3000/api/auth/${this.id}`, options)
                     .then (res => {
                         if (res.status == 200) {res.json ()
@@ -214,8 +218,8 @@ export default {
                         this.success= false;
                         this.message = "Erreur serveur !";
                     })
-            }
-        })
+                }
+            })
 
             //Bouton de retour en arrière sur la modification de l'profile
             const newCancelButton = document.createElement("button");

@@ -42,7 +42,7 @@
         <div class="required"> * Champs requis </div>
         <input type="submit" id="signupButton" value="S'inscrire" disabled>
       </form>
-
+      <!--v-show directive toggle la data, affiche l'erreur si besoin uniquement-->
       <p id="erreur" v-show="success===false"> Echec de l'inscription : {{message}} </p>
 
       <div id="dejaCompte">
@@ -85,7 +85,9 @@ export default {
         });
         reader.readAsDataURL(fileUploaded);
       }
-      else {this.imageLoaded=false;}
+      else {
+        this.imageLoaded=false;
+      }
     },
     //Fonction appelée lors de la soumission du formulaire
     sendForm(event) {

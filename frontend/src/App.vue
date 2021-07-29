@@ -9,6 +9,9 @@
         <a href="#"><li>CGV</li></a>
         <a href="#"><li>A propos</li></a>
       </ul>
+      <div id="logo">
+        <img alt="Groupomania logo" src="./assets/logonoir.png" />
+      </div>
       <p>{{ copyright }}</p>
     </footer>
   </div>
