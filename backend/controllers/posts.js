@@ -24,7 +24,9 @@ exports.getAllPosts = (req, res, next) => {
         }
         res.status(200).json(Posts);
       }
-      else {res.status(200).json([]);}
+      else {
+        res.status(200).json([]);
+      }
     }
   })
 }

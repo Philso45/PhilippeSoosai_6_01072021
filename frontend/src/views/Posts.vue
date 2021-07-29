@@ -115,13 +115,7 @@ export default {
             const miniprofil = document.createElement("p");
             newDiv.appendChild(miniprofil);
             miniprofil.textContent = `Publié par ${json[i].prenom} `;
-            const newImage = document.createElement("img");
-            newImage.src = json[i].imageurl;
-            newImage.alt = json[i].imageurl;
-            newImage.width = 50;
-            newImage.height = 50;
-            newDiv.appendChild(newImage);
-
+            
             //Affiche depuis quand le post est publié
             const publishedOn = document.createElement("p");
             //La réponse de la database nous indique depuis combien d'heures/min/sec le post est publié sous le format hhh:mm:ss

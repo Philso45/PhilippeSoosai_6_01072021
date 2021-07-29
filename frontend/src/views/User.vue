@@ -6,11 +6,10 @@
       </div>
       <nav id="nav">
         <ul>
-          <li class="disconnection" @click = "disconnection"> Déconnexion </li>
+          <li class="deconnexion" @click = "deconnexion"> Déconnexion </li>
         </ul>
       </nav>
     </header>
-    <h1 v-if="prenom">Bonjour {{prenom}}, voici les détails du profil</h1>
     <div id="profilDiv"></div>
 
 
@@ -42,7 +41,7 @@ export default {
     //Chargement automatique dès que le js est monté
     mounted() {
         this.urlId=window.location.href.substr((window.location.href.lastIndexOf("/") + 1));
-        const userInfo = JSON.parse(localStorage.getItem('userInfo')); //on récupère les infos de connection
+        const userInfo = JSON.parse(localStorage.getItem('userInfo')); //on récupère les infos de connection de l'utilisateur
         if (userInfo) { //On vérifie si l'utilisateur s'est connecté, sinon on le renvoie vers la page login
             this.id = userInfo.id;
             this.prenom = userInfo.prenom;
@@ -75,12 +74,14 @@ export default {
                     const divToFill = document.getElementById('profilDiv');
 
                     //Affichage profil avec email et photo de profil
-                    let newP = document.createElement("p");
-                    newP.textContent = "Adresse e-mail : "+json.email;
-                    divToFill.appendChild(newP);
-                    let newP2 = document.createElement("p");
-                    newP2.textContent = "Photo de profil : ";
-                    divToFill.appendChild(newP2);
+                    let afficheP1 = document.createElement("p");
+                    afficheP1.textContent = "Adresse e-mail : "+json.email;
+                    divToFill.appendChild(afficheP1);
+                    //Libellé de l'image
+                    let afficheP2 = document.createElement("p");
+                    afficheP2.textContent = "Photo de profil : ";
+                    divToFill.appendChild(afficheP2);
+                    //Image du profil
                     let imageContainer = document.createElement("div");
                     divToFill.appendChild(imageContainer);
                     let newImg = document.createElement("img");
@@ -101,12 +102,12 @@ export default {
         .catch (() => {
             this.waiting=false;
             this.success= false;
-            this.message = "Désolé, le serveur ne répond pas ! Veuillez réessayer ultérieurement";
+            this.message = "Erreur Server !";
         })
     },
 
     //Effacement des données de connection et redirection vers la page login
-    disconnection() {
+    deconnexion() {
         localStorage.clear();
         this.$router.push({ name: 'login' });
     },
@@ -143,7 +144,7 @@ export default {
                 .catch (() => {
                     this.waiting=false;
                     this.success= false;
-                    this.message = "Désolé, le serveur ne répond pas ! Veuillez réessayer ultérieurement";
+                    this.message = "Erreur Serveur";
                 })
         }
     },
@@ -185,7 +186,7 @@ export default {
                 this.message = "La taille maximale du fichier doit être de 1Mb";
             }
 
-            //méthode put avec la nouvelle photo de profile
+            //méthode put pour afficher la nouvelle photo de profil
             else if (fileToSend) {
                 let formData = new FormData();
                 formData.append('image', fileToSend);

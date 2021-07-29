@@ -17,8 +17,6 @@
         </nav>
     </header>
 
-    <h1 v-if="prenom">Bonjour {{prenom}}, voici les détails du Post</h1>
-
     <section>
 
         <!--Div contenant le post -->
@@ -154,8 +152,8 @@ export default {
                         
                         //Paragraphe indiquant de quand date le post
                         const publishedOn = document.createElement("p");
-                        /*Le paragraphe date reçue de la base indique "post publié il y a hhh:mm:ss " 
-                        On ne s'intéresse ici qu'au nombre d'heures depuis que la post a été publié*/
+                        /*Le paragraphe date reçue de la base indique "post publié il y a hhh:mm:ss " */
+                        
                         const hoursSincePost = parseInt(json.date.substring(0,json.date.indexOf(':')));
                         switch (true) {
                             case hoursSincePost == 0:
@@ -239,7 +237,7 @@ export default {
         postLike(){
             const postId = window.location.href.substr((window.location.href.lastIndexOf("/") + 1));
             this.waiting=true;
-            //Si le post est déjà liké, ça veut dire qu'on veut le dé-liker => on poste la valeur 1 pour l'API
+            //Dé-liker => on poste la valeur 1 pour l'API
             if (this.userLike == true) {
                 const optionsLike = {
                     method: 'POST',
@@ -339,7 +337,7 @@ export default {
                     .catch (() => {
                         this.waiting=false;
                         this.success= false;
-                        this.message = "Désolé, le serveur ne répond pas ! Veuillez réessayer ultérieurement";
+                        this.message = "Erreur serveur !";
                     });
             }
             //Si le post n'a pas encore été disliké par nous-mêmes, on poste la valeur -2 à l'API
@@ -371,7 +369,7 @@ export default {
                     .catch (() => {
                         this.waiting=false;
                         this.success= false;
-                        this.message = "Désolé, le serveur ne répond pas ! Veuillez réessayer ultérieurement";
+                        this.message = "Erreur serveur !";
                     });
             }
         },
@@ -408,7 +406,7 @@ export default {
                             //Affichage de l'info "nomnbre total de commentaires en bas du post"
                             if (this.numberOfComments > 1) {document.getElementById("numberOfComments").textContent= this.numberOfComments + " commentaires";}
                             else if (this.numberOfComments == 1) {document.getElementById("numberOfComments").textContent= "1 commentaire";}
-                            else {document.getElementById("numberOfComments").textContent= "Pas encore de commentaire";}
+                            else {document.getElementById("numberOfComments").textContent= "Pas encore de commentaire, commentez à votre tour !";}
                             
                             //S'il y a des commentaires
                             if (json.length>0) {
@@ -471,7 +469,7 @@ export default {
                                         }) //Fin de l'appel DELETE à l'API (sur les commentaires)
                                     } //Fin du "if" sur la présence du bouton de suppression du commentaire
                                 } //Fin de la boucle for
-                            } //Fin du "if" sur l'existence des commentaires
+                            } //Fin du "if" sur l'existence des commentaires ou non
                         }) //Fin des actions en cas de réponse OK de l'API GET sur les commentaires
                     }
                     //Cas où l'API renvoie un code d'erreur
@@ -486,7 +484,7 @@ export default {
                 .catch (() => {
                     this.waiting=false;
                     this.success= false;
-                    this.message = "Désolé, le serveur ne répond pas ! Veuillez réessayer ultérieurement";
+                    this.message = "Erreur serveur !";
                 })
         },
         //Fonction appelée en cas de suppression du post
@@ -524,7 +522,7 @@ export default {
                     .catch (() => {
                         this.waiting=false;
                         this.success= false;
-                        this.message = "Désolé, le serveur ne répond pas ! Veuillez réessayer ultérieurement";
+                        this.message = "Erreur serveur ! ";
                     })
             }
         },
@@ -566,10 +564,9 @@ export default {
                     .catch (() => {
                         this.waiting=false;
                         this.success= false;
-                        this.message = "Désolé, le serveur ne répond pas ! Veuillez réessayer ultérieurement";
+                        this.message = "Erreur serveur";
                     });
-            } //Fin du "if"
-                
+            }          
         } //Fin de la fonction
     } //Fin des méthodes
 }
@@ -585,7 +582,7 @@ section {
 }
 #postDiv {
     text-align: center;
-    box-shadow: 5px 5px 10px grey; //effet d'ombre
+    box-shadow: 5px 5px 10px grey;
     margin:30px auto;
     background-color: #d4d3d3;
     padding:5px;
